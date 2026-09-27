@@ -45,8 +45,24 @@
                        String(share.google_review_url).indexOf("https://") === 0
         ? '<a class="button review" href="' + esc(share.google_review_url) +
           '" target="_blank" rel="noopener">Happy with the work? Leave us a review</a>' : "";
-      var warranty = share.warranty_text
-        ? '<p class="warranty">🛡 This work carries a <strong>' + esc(share.warranty_text) + "</strong>.</p>" : "";
+      var formatWarranty = function (text) {
+        if (!text) return "";
+        var t = String(text).trim().replace(/\.+$/, "");
+        if (!t) return "";
+        if (/^(this work|backed by|all work|we offer|comes with)/i.test(t)) {
+          return '<p class="warranty">🛡 ' + esc(t) + ".</p>";
+        }
+        var normalized = t
+          .replace(/^(\d+)\s+years?(\s+warranty)?$/i, function (_, count) { return count + "-year warranty"; })
+          .replace(/^(\d+)\s+months?(\s+warranty)?$/i, function (_, count) { return count + "-month warranty"; })
+          .replace(/^(\d+)\s+days?(\s+warranty)?$/i, function (_, count) { return count + "-day warranty"; });
+        if (!/warranty|guarantee/i.test(normalized)) {
+          normalized = normalized + " warranty";
+        }
+        var article = /^[aeiou]/i.test(normalized) ? "an" : "a";
+        return '<p class="warranty">🛡 This work carries ' + article + " <strong>" + esc(normalized) + "</strong>.</p>";
+      };
+      var warranty = formatWarranty(share.warranty_text);
       var powered = share.show_powered_by
         ? '<div class="powered">Project proof powered by <strong>CrewFlow</strong></div>' : "";
 
