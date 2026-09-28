@@ -36,30 +36,17 @@
       var optionsBlock = "";
       var optionField = "";
       if (share.status === "pending" && Array.isArray(share.options) && share.options.length) {
-        var cards = '<button type="button" class="option selected" onclick="pickOption(-1)">' +
+        var cards = '<button type="button" class="option selected" data-option-index="-1">' +
           '<div class="name">Recommended — as itemized above</div>' +
           '<div class="price">' + money(share.total, share.currency_code) + "</div></button>";
         share.options.forEach(function (option, index) {
-          cards += '<button type="button" class="option" onclick="pickOption(' + index + ')">' +
+          cards += '<button type="button" class="option" data-option-index="' + index + '">' +
             '<div class="name">' + esc(option.name) + "</div>" +
             (option.scope ? '<div class="scope">' + esc(option.scope) + "</div>" : "") +
             '<div class="price">' + money(option.price, share.currency_code) + "</div></button>";
         });
         optionsBlock = '<h2 style="margin-top:22px">Choose an option</h2><div class="options">' + cards + "</div>";
         optionField = '<input type="hidden" name="option_index" id="option_index" value="-1" />';
-        window.pickOption = function (index) {
-          var field = document.getElementById("option_index");
-          if (field) field.value = String(index);
-          document.querySelectorAll(".option").forEach(function (card) {
-            card.classList.remove("selected");
-          });
-          var buttons = document.querySelectorAll(".option");
-          for (var i = 0; i < buttons.length; i++) {
-            if (buttons[i].getAttribute("onclick") === "pickOption(" + index + ")") {
-              buttons[i].classList.add("selected");
-            }
-          }
-        };
       }
       var decision = share.status !== "pending"
         ? '<div class="decision ' + share.status + '"><span class="seal">' + (share.status === "approved" ? "✓" : "✕") +
@@ -91,6 +78,21 @@
         money(share.total, share.currency_code) + "</span></div>" + optionsBlock + decision +
         '<p class="contact">Questions about this quote? ' + contact + "</p>" +
         '<p class="expiry">This link expires ' + esc(longDate(share.expires_at)) + ".</p></div>";
+
+      // Inline onclick attributes would be blocked by the page's
+      // script-src 'self' CSP, so the option cards are wired here, after
+      // the markup exists: a click records the index in the hidden field
+      // the approve form submits and moves the selected highlight.
+      Array.prototype.forEach.call(app.querySelectorAll(".option"), function (card) {
+        card.addEventListener("click", function () {
+          var field = document.getElementById("option_index");
+          if (field) field.value = card.getAttribute("data-option-index") || "-1";
+          Array.prototype.forEach.call(app.querySelectorAll(".option.selected"), function (other) {
+            other.classList.remove("selected");
+          });
+          card.classList.add("selected");
+        });
+      });
     })
     .catch(function () { fail("This approval link is unavailable or has expired."); });
 })();
