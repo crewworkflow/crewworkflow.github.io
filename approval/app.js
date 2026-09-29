@@ -49,12 +49,12 @@
           "</strong>" + (share.chosen_option ? "<br /><small>Selected option: " + esc(share.chosen_option) +
           (chosen ? " — " + money(chosen.price, share.currency_code) : "") + "</small>" : "") +
           "<br /><small>" + esc(share.decided_at ? longDate(share.decided_at) : "") + "</small></div></div>"
-        : '<div class="actions">' +
-          '<form method="post" action="' + esc(share.decide_base + "approve") + '">' +
+        : '<form method="post" action="' + esc(share.decide_base + "approve") + '">' +
           '<label>Your name<input name="decided_by_name" required="required" maxlength="120" autocomplete="name" /></label>' +
-          '<button type="submit" class="primary">Approve this quote</button></form>' +
-          '<form method="post" action="' + esc(share.decide_base + "decline") + '">' +
-          '<button type="submit" class="secondary">Decline</button></form></div>' +
+          '<div class="actions">' +
+          '<button type="submit" class="primary">Approve this quote</button>' +
+          '<button type="submit" formaction="' + esc(share.decide_base + "decline") + '" class="secondary">Decline</button>' +
+          '</div></form>' +
           '<p class="fine">Your choice is recorded once and sent to ' + esc(share.business_name) +
           ". CrewFlow records the name entered above; it does not independently verify identity.</p>";
       var rows = (share.items || []).map(function (item) {
