@@ -31,7 +31,7 @@
           "<h2>Approve completed work</h2><p>Confirm that you have reviewed this completion summary.</p>" +
           '<label>Your name<input name="approver_name" required="required" maxlength="120" autocomplete="name" /></label>' +
           '<button type="submit">Approve completed work</button>' +
-          "<p><small>CrewFlow records the name entered here; it does not independently verify identity.</small></p></form>";
+          "<p><small>CrewFlow records the name entered here, and does not independently verify identity.</small></p></form>";
       var requestHref = share.business_email
         ? "mailto:" + encodeURIComponent(share.business_email) +
           "?subject=" + encodeURIComponent("Request similar work " + share.business_name) +

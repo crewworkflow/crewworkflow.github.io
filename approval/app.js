@@ -56,7 +56,7 @@
           '<button type="submit" formaction="' + esc(share.decide_base + "decline") + '" class="secondary">Decline</button>' +
           '</div></form>' +
           '<p class="fine">Your choice is recorded once and sent to ' + esc(share.business_name) +
-          ". CrewFlow records the name entered above; it does not independently verify identity.</p>";
+          ". CrewFlow records the name entered above, and does not independently verify identity.</p>";
       var rows = (share.items || []).map(function (item) {
         return "<tr><td>" + esc(item.name) + "</td><td>" + esc(item.quantity) + "</td><td>" +
           money(item.unitPrice, share.currency_code) + "</td><td>" +
