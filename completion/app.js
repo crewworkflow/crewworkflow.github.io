@@ -63,6 +63,24 @@
         return '<p class="warranty">🛡 This work carries ' + article + " <strong>" + esc(normalized) + "</strong>.</p>";
       };
       var warranty = formatWarranty(share.warranty_text);
+      // Once the work is approved, a warranty can be claimed straight from
+      // this page. Its own form carries its own name field (a second action
+      // sharing the approval form would silently drop the field), and the
+      // recorded request is shown back instead of offering a second one —
+      // the server treats repeats as no-ops either way.
+      var warrantyAction = "";
+      if (share.approved_at && share.warranty_text) {
+        warrantyAction = share.warranty_requested_at
+          ? '<div class="approved"><span class="seal">🛠</span><div><strong>Warranty call-back requested by ' +
+            esc(share.warranty_requested_by) + "</strong><br /><small>" +
+            esc(longDate(share.warranty_requested_at)) + " — " + esc(share.business_name) +
+            " will be in touch.</small></div></div>"
+          : '<form class="approval" method="post" action="' + esc(share.warranty_url) + '">' +
+            "<h2>Request warranty call-back</h2><p>Something needs attention? " + esc(share.business_name) +
+            " will come back and make it right.</p>" +
+            '<label>Your name<input name="requester_name" required="required" maxlength="120" autocomplete="name" /></label>' +
+            '<button type="submit">Request a call-back</button></form>';
+      }
       var powered = share.show_powered_by
         ? '<div class="powered">Project proof powered by <strong>CrewFlow</strong></div>' : "";
 
@@ -80,7 +98,7 @@
         '<div class="meta"><span>Completed ' + esc(longDate(share.completed_at)) + "</span><span>Prepared by " +
         esc(share.business_name) + "</span></div></section>" +
         '<div class="actions"><a class="button" href="' + esc(share.assets.report) + '">Download completion report</a>' +
-        requestButton + "</div>" + approval + reviewLink + warranty + "</div>" + powered;
+        requestButton + "</div>" + approval + reviewLink + warranty + warrantyAction + "</div>" + powered;
     })
     .catch(function () { fail("This completion link is unavailable or has expired."); });
 })();
