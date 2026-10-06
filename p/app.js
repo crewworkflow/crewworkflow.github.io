@@ -5,7 +5,7 @@
   // the only variable part of the request is the slug query value, which is
   // restricted to [a-z0-9-] below. (Browser-side fetch — the "server makes
   // the request" SSRF class does not apply, but the target is pinned anyway.)
-  var endpoint = new URL("https://lkuhoyeeylileuuavukj.supabase.co/functions/v1/portfolio");
+  var endpoint = new URL("https://crewflow-api.akhlaq.cloud/functions/v1/portfolio");
   var esc = function (value) {
     return String(value == null ? "" : value).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
