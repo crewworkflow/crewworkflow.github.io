@@ -1,7 +1,7 @@
 (function () {
   "use strict";
   var app = document.getElementById("app");
-  var FN = "https://lkuhoyeeylileuuavukj.supabase.co/functions/v1/quote-approval";
+  var FN = "https://crewflow-api.akhlaq.cloud/functions/v1/quote-approval";
   var token = new URLSearchParams(location.search).get("t") || "";
   var esc = function (value) {
     return String(value == null ? "" : value).replace(/[&<>"']/g, function (c) {
